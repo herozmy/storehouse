@@ -5,7 +5,7 @@ on:
     - cron: "30 18 * * *"
   push:
     branches:
-      - main
+      - latest
     paths-ignore:
       - "README.md"
       - ".github/workflows/delete-old-workflows.yml"
@@ -347,23 +347,23 @@ jobs:
           new_name=(amd64 amd64v3 armv5 armv6 armv7 armv8 mips-softfloat mipsle-hardfloat mipsle-softfloat)
           # `PuerNya` cores
           for ((i = 0; i < 9; i++)); do
-            mv -f "./tmp-sing-box/sing-box-puernya-linux-${archs[i]}/sing-box" ./tmp-sing-box/CrashCore
-            chmod +x ./tmp-sing-box/CrashCore
-            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-puernya-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./CrashCore
+            mv -f "./tmp-sing-box/sing-box-puernya-linux-${archs[i]}/sing-box" ./tmp-sing-box/sing-box
+            chmod +x ./tmp-sing-box/sing-box
+            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-puernya-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./sing-box
           done
 
           # `Release` cores
           for ((i = 0; i < 9; i++)); do
-            mv -f "./tmp-sing-box/sing-box-release-linux-${archs[i]}/sing-box" ./tmp-sing-box/CrashCore
-            chmod +x ./tmp-sing-box/CrashCore
-            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-release-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./CrashCore
+            mv -f "./tmp-sing-box/sing-box-release-linux-${archs[i]}/sing-box" ./tmp-sing-box/sing-box
+            chmod +x ./tmp-sing-box/sing-box
+            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-release-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./sing-box
           done
 
           # `dev` cores
           for ((i = 0; i < 9; i++)); do
-            mv -f "./tmp-sing-box/sing-box-dev-linux-${archs[i]}/sing-box" ./tmp-sing-box/CrashCore
-            chmod +x ./tmp-sing-box/CrashCore
-            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-dev-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./CrashCore
+            mv -f "./tmp-sing-box/sing-box-dev-linux-${archs[i]}/sing-box" ./tmp-sing-box/sing-box
+            chmod +x ./tmp-sing-box/sing-box
+            tar --no-same-owner -czf "./tmp-sing-box/compress/sing-box-dev-linux-${new_name[i]}.tar.gz" -C ./tmp-sing-box/ ./sing-box
           done
 
       - name: Move `sing-box` cores
