@@ -1,0 +1,80 @@
+name: Release mosdns
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天运行一次
+  workflow_dispatch:      # 保留手动触发选项
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone mosdns repository
+        uses: actions/checkout@v4
+        with:
+          repository: yyysuo/mosdns
+          path: mosdns
+          fetch-depth: 0
+
+      - name: Generate version
+        id: version
+        run: |
+          cd mosdns
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          CURRENT_DATE=$(date +'%Y%m%d')
+          VERSION="v${CURRENT_DATE}-${COMMIT_HASH}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${VERSION}"
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          if gh release view "mosdns" >/dev/null 2>&1; then
+            LATEST_COMMIT=$(gh release view "mosdns" --json body -q .body | grep -o 'Commit: [a-f0-9]*' | cut -d' ' -f2)
+            CURRENT_COMMIT=$(cd mosdns && git rev-parse HEAD)
+            if [ "$LATEST_COMMIT" == "$CURRENT_COMMIT" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        if: steps.check_release.outputs.exists == 'false'
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          check-latest: true
+          cache: true
+
+      - name: Set up Python
+        if: steps.check_release.outputs.exists == 'false'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          cd mosdns
+          python ./release.py
+        env:
+          CGO_ENABLED: '0'
+
+      - name: Publish
+        if: steps.check_release.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mosdns
+          name: "MosDNS Build"
+          body: |
+            构建时间: ${{ steps.version.outputs.version }}
+            Commit: ${{ github.sha }}
+          files: './mosdns/release/mosdns*.zip'
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
