@@ -1,3 +1,4 @@
+
 name: Release mosdns
 
 on:
@@ -9,6 +10,7 @@ jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
+      # 克隆仓库
       - name: Clone mosdns repository
         uses: actions/checkout@v4
         with:
@@ -16,16 +18,18 @@ jobs:
           path: mosdns
           fetch-depth: 0
 
+      # 生成版本号
       - name: Generate version
         id: version
         run: |
           cd mosdns
           COMMIT_HASH=$(git rev-parse --short HEAD)
           CURRENT_DATE=$(date +'%Y%m%d')
-          VERSION="v${CURRENT_DATE}-${COMMIT_HASH}"
+          VERSION="dev-mod-${CURRENT_DATE}-${COMMIT_HASH}"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${VERSION}"
 
+      # 检查是否已有发布
       - name: Check if release exists
         id: check_release
         run: |
@@ -43,6 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # 设置 Go 环境
       - name: Set up Go
         if: steps.check_release.outputs.exists == 'false'
         uses: actions/setup-go@v5
@@ -51,30 +56,35 @@ jobs:
           check-latest: true
           cache: true
 
+      # 设置 Python 环境
       - name: Set up Python
         if: steps.check_release.outputs.exists == 'false'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # 构建并注入版本信息
       - name: Build
         if: steps.check_release.outputs.exists == 'false'
         run: |
           cd mosdns
+          go build -ldflags "-X main.version=${{ steps.version.outputs.version }}" -o release/mosdns
           python ./release.py
         env:
           CGO_ENABLED: '0'
 
+      # 发布到 GitHub Releases
       - name: Publish
         if: steps.check_release.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: mosdns
+          tag_name: ${{ steps.version.outputs.version }}
           name: "MosDNS Build"
           body: |
+            版本号: ${{ steps.version.outputs.version }}
             构建时间: ${{ steps.version.outputs.version }}
             Commit: ${{ github.sha }}
-          files: './mosdns/release/mosdns*.zip'
+          files: './mosdns/release/mosdns*'
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
