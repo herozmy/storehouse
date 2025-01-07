@@ -1,10 +1,9 @@
-
 name: Release mosdns
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 每天运行一次
-  workflow_dispatch:      # 保留手动触发选项
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   build-release:
@@ -29,62 +28,55 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${VERSION}"
 
-      # 检查是否已有发布
-      - name: Check if release exists
-        id: check_release
-        run: |
-          if gh release view "mosdns" >/dev/null 2>&1; then
-            LATEST_COMMIT=$(gh release view "mosdns" --json body -q .body | grep -o 'Commit: [a-f0-9]*' | cut -d' ' -f2)
-            CURRENT_COMMIT=$(cd mosdns && git rev-parse HEAD)
-            if [ "$LATEST_COMMIT" == "$CURRENT_COMMIT" ]; then
-              echo "exists=true" >> $GITHUB_OUTPUT
-            else
-              echo "exists=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # 设置 Go 环境
       - name: Set up Go
-        if: steps.check_release.outputs.exists == 'false'
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.20'
           check-latest: true
           cache: true
 
-      # 设置 Python 环境
-      - name: Set up Python
-        if: steps.check_release.outputs.exists == 'false'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       # 构建并注入版本信息
-      - name: Build
-        if: steps.check_release.outputs.exists == 'false'
+      - name: Build mosdns
         run: |
           cd mosdns
           go build -ldflags "-X main.version=${{ steps.version.outputs.version }}" -o release/mosdns
+        env:
+          CGO_ENABLED: '0'
+
+      # 运行打包脚本
+      - name: Run release script
+        run: |
+          cd mosdns
           python ./release.py
         env:
           CGO_ENABLED: '0'
 
+      # 列出生成的文件
+      - name: List build directory
+        run: ls -al ./mosdns/release
+
+      # 如果脚本未生成 zip 文件，则手动打包
+      - name: Create ZIP package
+        if: failure()
+        run: |
+          cd mosdns/release
+          zip -r mosdns_${{ steps.version.outputs.version }}.zip mosdns
+
       # 发布到 GitHub Releases
-      - name: Publish
-        if: steps.check_release.outputs.exists == 'false'
+      - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version }}
           name: "MosDNS Build"
           body: |
-            版本号: ${{ steps.version.outputs.version }}
-            构建时间: ${{ steps.version.outputs.version }}
-            Commit: ${{ github.sha }}
-          files: './mosdns/release/mosdns*'
+            ### MosDNS Release
+            **版本号**: ${{ steps.version.outputs.version }}
+            **构建时间**: ${{ steps.version.outputs.version }}
+            **Commit 哈希**: ${{ github.sha }}
+          files: |
+            ./mosdns/release/mosdns
+            ./mosdns/release/*.zip
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
