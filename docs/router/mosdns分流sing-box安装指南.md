@@ -25,6 +25,7 @@ wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/scri
 ![image](https://github.com/user-attachments/assets/abaa16a8-a0b9-432d-90f2-105cedec5bde)
 
 选择内核：
+
 ![image](https://github.com/user-attachments/assets/500e9f93-b332-405c-ab35-c6234d6f17a5)
 
 * sing-box官方内核有两种安装方式
@@ -34,10 +35,12 @@ wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/scri
 按需选择
 这里以：曦灵X核为例，其他内核同理
 选择3，脚本自动安装内核，
+
 ![image](https://github.com/user-attachments/assets/da09fca4-77f8-40d9-85d6-2c73cb60e8a9)
 
 这里需要输入你的机场订阅地址<脚本不会储存你的订阅地址，请放心使用>
 输入y安装，写入订阅
+
 ![image](https://github.com/user-attachments/assets/2eddf4be-8cc6-4dc9-a0fa-1c60d39ec3d9)
 
 安装到这里会提示你是否安装sing-box<mihomo暂时没写>回家配置,需要有公网ip地址，按需选择
@@ -73,9 +76,11 @@ wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/scri
 #######################################singbox安装完毕##########################################
 ### mosdns安装
 脚本选择mosdns安装脚本
+
 ![image](https://github.com/user-attachments/assets/ee0da52b-6cab-419d-882c-330deecaf6ee)
 
 输入sing-box/mihomo入站地址端口：输入上面singbox的地址后面加上端口号`6666`
+
 ![image](https://github.com/user-attachments/assets/66fb2692-82ca-4b8f-92ae-0a8abbcc7df7)
 
 输入分流规则：
@@ -83,7 +88,9 @@ wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/scri
 * PH佬规则 <优势：安装完成以后输入 http://ip:9099/graphic 可以显示简单ui页面>
 
 ![image](https://github.com/user-attachments/assets/e32568ae-c46c-42b7-bc48-a4d0fa4da2dd)
+
 安装完成。
 主路由设置需要配合同目录fakeip相关设置
+
 https://github.com/herozmy/StoreHouse/blob/latest/docs/router/ros-fakeip%E5%88%86%E6%B5%81%E6%A8%A1%E5%BC%8F.md
 
