@@ -61,7 +61,6 @@
 /ip firewall mangle add action=change-mss chain=forward protocol=tcp tcp-flags=syn new-mss=clamp-to-pmtu passthrough=yes
 /ip firewall mangle add action=change-mss chain=output protocol=tcp tcp-flags=syn new-mss=clamp-to-pmtu passthrough=yes
 ```
-关闭相关服务
 ``` shell
 /ip firewall service-port disable ftp
 /ip firewall service-port disable irc
@@ -70,7 +69,25 @@
 /ip firewall service-port disable sip
 /ip firewall service-port disable tftp
 ```
+### 关闭相关端口及服务
+``` shell
+/ip smb set enabled=no
+/ip smb shares disable numbers=0
+/ip ssh set forwarding-enabled=no
+/ip socks set enabled=no
+/ip upnp set enabled=no
+/ip proxy set enabled=no
+/ip service disable api
+/ip service disable api-ssl
+/ip service disable ftp
+/ip service disable ssh
+/ip service disable telnet
+/ip service disable www
+/ip service disable www-ssl
+/tool bandwidth-server set enabled=no
+```
 
-#
-#现在基本#网络已经 配置完，
+#基础网络设置完成
+配置pppoe-out1接口拨号，User填入宽带账号，Password填入宽带密码
+现在可以正常上网了
 
