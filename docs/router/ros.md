@@ -86,7 +86,12 @@
 /ip service disable www-ssl
 /tool bandwidth-server set enabled=no
 ```
-
+### 配置时区和ntp
+``` shell
+/system clock set time-zone-name="Asia/Shanghai"
+/system clock manual set time-zone=+08:00
+/system ntp client set enabled=yes servers=cn.pool.ntp.org,ntp1.aliyun.com,time1.cloud.tencent.com
+```
 ### 基础网络设置完成
 配置pppoe-out1接口拨号，User填入宽带账号，Password填入宽带密码
 现在可以正常上网了
