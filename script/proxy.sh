@@ -1150,24 +1150,23 @@ cat << EOF >  "/root/go_home.json"
         }   
     ],   
     "outbounds": [   
-        { 
-         "type": "hysteria2", 
-         "server": "xxx.top", 
-         "server_port": 33445, 
-         "tag": "home",
-         "tcp_fast_open": true, 
-         "up_mbps": 100, 
-         "down_mbps": 100, 
-         "password": "12345678", 
-         "tls": { 
-         "enabled": true, 
-         "server_name": "bing.com", 
-         "insecure": true, 
-         "alpn": [ 
-          "h3" 
-            ] 
-          } 
-        }, 
+        {
+            "type": "hysteria2",
+            "server": "${domain}",       
+            "server_port": ${hyport}, 
+            "tag": "home", 
+            "up_mbps": 50,
+            "down_mbps": 500,
+            "password": "${password}",
+            "tls": {
+            "enabled": true,
+            "server_name": "bing.com",   
+            "insecure": true,
+            "alpn": [
+             "h3"
+               ]
+             }
+           },
         {   
             "type": "direct",   
             "tag": "direct"   
