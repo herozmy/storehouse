@@ -21,6 +21,7 @@ wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/scri
 ### 脚本安装流程
 #########sing-box安装
 安装sing-box/mihomo
+
 ![image](https://github.com/user-attachments/assets/abaa16a8-a0b9-432d-90f2-105cedec5bde)
 
 选择内核：
