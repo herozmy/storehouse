@@ -5,7 +5,7 @@
 ``` shell
 /routing table add name=proxy-v4 fib
 ```
-### 地址列表添加fakeip段及添加tg v4网段及奈菲v4网段
+### 地址列表添加fakeip v4段及添加tg v4网段及奈菲v4网段
 ``` shell
 /ip firewall address-list add list=proxy_ipv4 address=207.45.72.0/22
 /ip firewall address-list add list=proxy_ipv4 address=208.75.76.0/22
@@ -34,5 +34,18 @@
 
 ### 伪装中排除标记流量，用于在sing-box或者mihomo ui中显示源地址ip
 # fakeip v6配置
+### 添加`proxy-v6`标签
+``` shell
+/routing table add name=proxy-v6 fib
+```
+### 地址列表添加fakeip及时tg v6段
+``` shell
+/ipv6 firewall address-list add address=f2b0::/18 list=proxy_ipv6
+/ipv6 firewall address-list add address=2001:b28:f23d::/48 list=proxy_ipv6
+/ipv6 firewall address-list add address=2001:b28:f23f::/48 list=proxy_ipv6
+/ipv6 firewall address-list add address=2001:67c:4e8::/48 list=proxy_ipv6
+/ipv6 firewall address-list add address=2001:b28:f23c::/48 list=proxy_ipv6
+/ipv6 firewall address-list add address=2a0a:f280::/32 list=proxy_ipv6
+```
 
 ### enjoy 大工告成那
