@@ -33,6 +33,8 @@
 `proxy-v4`为上面设置的标记需要代理的流量
 
 ### 伪装中排除标记流量，用于在sing-box或者mihomo ui中显示源地址ip
+![image](https://github.com/user-attachments/assets/cfb992b0-a2ba-45d1-b2a8-8588996baf94)
+
 # fakeip v6配置
 ### 添加`proxy-v6`标签
 ``` shell
@@ -62,5 +64,6 @@
 /routing rule add action=lookup-only-in-table comment= "for ipv6 mangle effective in route" disabled=no routing-mark=sing-box-v6 table=proxy-v6
 ```
 ### 伪装中排除标记流量，用于在sing-box或者mihomo ui中显示源地址ip
+![image](https://github.com/user-attachments/assets/ba010fb0-e269-4009-b1df-ee245351f4de)
 
 ### enjoy 大工告成那
