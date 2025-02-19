@@ -47,5 +47,20 @@
 /ipv6 firewall address-list add address=2001:b28:f23c::/48 list=proxy_ipv6
 /ipv6 firewall address-list add address=2a0a:f280::/32 list=proxy_ipv6
 ```
+为走向`proxy_ipv6`地址标记
+``` shell
+/ipv6 firewall mangle add action=mark-routing chain=prerouting dst-address-list=proxy_ipv6 new-routing-mark=proxy-v6
+```
+为带有`pmihomo6`标记的流量转发至proxy代理服务（sing-box或者mihomo）
+``` shell
+/ipv6 route add dst-address=::/0 gateway=dc00::2222 routing-table=proxy-v6
+```
+`dc00::2222`为`sing-box或者mihomo地址 v6地址`
+`proxy-v6`为上面设置的标记需要代理的流量
+### 添加v6路由规则
+``` shell
+/routing rule add action=lookup-only-in-table comment= "for ipv6 mangle effective in route" disabled=no routing-mark=sing-box-v6 table=proxy-v6
+```
+### 伪装中排除标记流量，用于在sing-box或者mihomo ui中显示源地址ip
 
 ### enjoy 大工告成那
