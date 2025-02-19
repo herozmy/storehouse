@@ -96,3 +96,41 @@
 配置pppoe-out1接口拨号，User填入宽带账号，Password填入宽带密码
 现在可以正常上网了
 
+# 开启ipv6
+使用NAT6配置，ipv6内网网段为 dc00::/64，bridge1地址为dc00::1111/64
+``` shell
+/ipv6 settings set disable-ipv6=no
+```
+## 获取ipv6前缀
+``` shell
+/ipv6 dhcp-client add interface=pppoe-out1 pool-name=dhcpv6-gua-pool1 pool-prefix-length=60 request=prefix
+```
+## 添加局域网ULA地址池
+``` shell
+/ipv6 pool add name=dhcpv6-ula-pool1 prefix=dc00::/64 prefix-length=64
+```
+## 配置bridge1的ula地址
+``` shell
+/ipv6 address add address=dc00::1111/64 from-pool=dhcpv6-ula-pool1 interface=bridge1
+```
+## 配置动态源地址伪装（NAT6）
+``` shell
+/ipv6 firewall nat add chain=srcnat action=masquerade
+```
+## 禁用默认ND配置，新建配置
+``` shell
+/ipv6 nd set [ find default=yes ] advertise-dns=no disabled=yes
+/ipv6 nd add advertise-dns=no advertise-mac-address=no interface=bridge1 managed-address-configuration=yes other-configuration=yes ra-interval=5m-15m
+```
+## 配置防火墙，因使用NAT6，防火墙与V4相似，没有PSD
+``` shell
+/ipv6 firewall filter add action=accept chain=forward in-interface=bridge1
+/ipv6 firewall filter add action=accept chain=input in-interface=bridge1
+/ipv6 firewall filter add action=accept chain=input connection-state=established,related
+/ipv6 firewall filter add action=accept chain=input in-interface=!pppoe-out1 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=input connection-state=invalid in-interface=pppoe-out1
+/ipv6 firewall filter add action=drop chain=input in-interface=pppoe-out1 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=input dst-port=53,8291,80 in-interface=pppoe-out1 protocol=tcp
+/ipv6 firewall filter add action=drop chain=input dst-port=53,8291,80 in-interface=pppoe-out1 protocol=udp
+```
+
