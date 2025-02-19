@@ -87,7 +87,7 @@
 /tool bandwidth-server set enabled=no
 ```
 
-#基础网络设置完成
+### 基础网络设置完成
 配置pppoe-out1接口拨号，User填入宽带账号，Password填入宽带密码
 现在可以正常上网了
 
