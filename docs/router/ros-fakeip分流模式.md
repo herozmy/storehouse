@@ -7,6 +7,7 @@
 ```
 ### 地址列表添加fakeip v4段及添加tg v4网段及奈菲v4网段
 ``` shell
+/ip firewall address-list add list=proxy_ipv4 address=28.0.0.0/8
 /ip firewall address-list add list=proxy_ipv4 address=207.45.72.0/22
 /ip firewall address-list add list=proxy_ipv4 address=208.75.76.0/22
 /ip firewall address-list add list=proxy_ipv4 address=210.0.153.0/24
@@ -20,6 +21,10 @@
 /ip firewall address-list add list=proxy_ipv4 address=91.108.20.0/22
 /ip firewall address-list add list=proxy_ipv4 address=185.76.151.0/24
 /ip firewall address-list add list=proxy_ipv4 address=95.161.64.0/20
+/ip firewall address-list add list=proxy_ipv4 address=8.8.8.8/32
+/ip firewall address-list add list=proxy_ipv4 address=8.8.4.4/32
+/ip firewall address-list add list=proxy_ipv4 address=1.1.1.1/32
+/ip firewall address-list add list=proxy_ipv4 address=1.0.0.1/32
 ```
 为走向`proxy_ipv4`地址标记
 ``` shell
