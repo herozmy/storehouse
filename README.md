@@ -11,3 +11,8 @@
 ``` shell
 wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/script/proxy.sh && bash proxy.sh
 ```
+### 文档
+* `docs` 文档
+* `docs/router` 路由器fakeip文档
+* `docs/router/mosdns分流sing-box安装指南.md` mosdns分流sing-box安装指南
+
