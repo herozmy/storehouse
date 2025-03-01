@@ -6,3 +6,8 @@
 * `mihomo` 稳定版，开发版
 * `mosdns` 魔改版本
 
+### 脚本
+* `proxy.sh` 脚本
+``` shell
+wget https://raw.githubusercontent.com/herozmy/StoreHouse/refs/heads/latest/script/proxy.sh && bash proxy.sh
+```
