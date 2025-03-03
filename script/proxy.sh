@@ -1437,11 +1437,7 @@ install_mosdns_config(){
         ;;
     2)
  (
-    git init >/dev/null 2>&1 &&
-    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git &&
-    git config core.sparsecheckout true &&
-    echo 'mosdns-ph' > .git/info/sparse-checkout &&
-    git pull origin main
+    wget https://github.com/herozmy/StoreHouse/releases/download/mosdns/mosdns-ph.zip
     mv mosdns-ph mosdns
 )
         ;;
