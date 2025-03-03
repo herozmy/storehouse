@@ -1427,31 +1427,34 @@ install_mosdns_config(){
         exit 0
         ;;
     1)
-   (
-    git init >/dev/null 2>&1 &&
-    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git &&
-    git config core.sparsecheckout true &&
-    echo 'mosdns' > .git/info/sparse-checkout &&
-    git pull origin main
-   )
+        (
+            wget -O mosdns.zip https://github.com/herozmy/StoreHouse/raw/refs/heads/latest/config/mosdns/o/mosdns.zip &&
+            mkdir -p /etc/mosdns/ &&
+            unzip mosdns.zip -d /etc/mosdns/ &&
+            rm -f mosdns.zip
+        ) || {
+            echo "下载或解压失败，请检查网络连接和目标目录权限。"
+            exit 1
+        }
         ;;
     2)
- (
-    wget https://github.com/herozmy/StoreHouse/releases/download/mosdns/mosdns-ph.zip
-    mv mosdns-ph mosdns
-)
+        (
+            wget -O mosdns.zip https://github.com/herozmy/StoreHouse/raw/refs/heads/latest/config/mosdns/ph/mosdns2025302.zip &&
+            mkdir -p /etc/mosdns/ &&
+            mv /etc/mosdns/config_leak.yaml /etc/mosdns/config.yaml &&
+            unzip mosdns.zip -d /etc/mosdns/ &&
+            rm -f mosdns.zip
+        ) || {
+            echo "下载或解压失败，请检查网络连接和目标目录权限。"
+            exit 1
+        }
         ;;
     *)
         echo "请输入正确的数字 [0-2]"
         ;;
     esac
 
-if [ $? -ne 0 ]; then
-    echo "拉取失败，请重新拉取"
-    exit 1
-fi
     echo -e "${green_text}Mosdns规则拉取成功${reset}"
-    cd /root && mv mosdns /etc/
     echo "配置mosdns"
     sed -i "s/- addr: 10.10.10.147:6666/- addr: ${uiport}/g" /etc/mosdns/config.yaml
     echo "设置mosdns开机自启动"
