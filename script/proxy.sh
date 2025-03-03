@@ -1406,7 +1406,7 @@ install_mosdns(){
 }
 install_mosdns_config(){   
     echo -e "\n自定义设置（以下设置可直接回车使用默认值）"
-    read -p "输入sing-box/mihomo入站地址端口（默认10.10.10.147:6666）：" uiport
+    read -p "输入sing-box/mihomo入站地址（默认10.10.10.147:6666）：" uiport
     uiport="${uiport:-10.10.10.147:6666}"
     echo -e "已设置sing-box/mihomo入站地址：\e[36m$uiport\e[0m"
     check_resolved
